@@ -31,4 +31,4 @@ jobs:
         file: ./Dockerfile
         builder: ${{ steps.buildx.outputs.name }}
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:latest
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:$GITHUB_RUN_ID
