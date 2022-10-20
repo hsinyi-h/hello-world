@@ -29,6 +29,8 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
@@ -37,5 +39,3 @@ jobs:
         builder: ${{ steps.buildx.outputs.name }}
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:$GITHUB_RUN_ID
-        cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:buildcache
-        cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:buildcache,mode=max
