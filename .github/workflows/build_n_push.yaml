@@ -54,8 +54,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
+        key: ${{ secrets.key }}
         script: |
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:latest
           docker stop mytomcat
