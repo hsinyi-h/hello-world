@@ -3,7 +3,7 @@ name: Build and push to Dockerhub
 on: [push]
 
 jobs:
-  build:
+  cicd:
 
     runs-on: ubuntu-latest
 
@@ -29,12 +29,6 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat
             # generate Docker tags based on the following events/attributes
         tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
             type=sha
     #  - name: Set up QEMU
     #    uses: docker/setup-qemu-action@v2
@@ -55,6 +49,18 @@ jobs:
           ${{ steps.meta.outputs.tags }}
           ${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:latest
         labels: ${{ steps.meta.outputs.labels }}
+    - name: deploy to remote host
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mytomcat:latest
+          docker stop mytomcat
+          docker run --rm -d -p 8080:8080 --name mytomcat  hsinyih/mytomcat
+
 
 
     #- name: Login to Docker Hub
